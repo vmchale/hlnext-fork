@@ -39,18 +39,24 @@ endif
 if maparg('?') == ""
     nnoremap  <unique>         ?   :call HLNextSetTrigger()<CR>?
 endif
-if maparg('n','n') == ""
-    nnoremap  <unique><silent> n  n:call HLNext()<CR>
-endif
-if maparg('N','n') == ""
-    nnoremap  <unique><silent> N  N:call HLNext()<CR>
-endif
+
+nnoremap <unique><Leader>c :call HLNextOff() \| :nohlsearch<CR>
 
 " Default highlighting for next match...
 highlight default HLNext ctermfg=white ctermbg=red
 
 
 "====[ IMPLEMENTATION ]=======================================
+
+" map n/N to the right thing
+function! SetKeys()
+    if maparg('n','n') == ""
+        nnoremap  <unique><silent> n  n:call HLNext()<CR>
+    endif
+    if maparg('N','n') == ""
+        nnoremap  <unique><silent> N  N:call HLNext()<CR>
+    endif
+endfunction
 
 " Clear previous highlighting and set up new highlighting...
 function! HLNext ()
@@ -72,6 +78,7 @@ endfunction
 
 " Prepare to active next-match highlighting after cursor moves...
 function! HLNextSetTrigger ()
+    call SetKeys()
     augroup HLNext
         autocmd!
         autocmd  CursorMoved  *  :call HLNextMovedTrigger()
@@ -83,9 +90,9 @@ function! HLNextMovedTrigger ()
     augroup HLNext
         autocmd!
     augroup END
+    :unmap nN
     call HLNext()
 endfunction
 
 
-" Restore previous external compatibility options
 let &cpo = s:save_cpo
