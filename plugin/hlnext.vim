@@ -1,7 +1,6 @@
-" Vim global plugin for highlighting matches
-" Last change:  Thu Dec 19 16:08:21 EST 2013
-" Maintainer:	Damian Conway
-" License:	This file is placed in the public domain.
+" Vim global plugin for highlighting matches, forked from Damian
+" Conway's implementation. 
+" License:	BSD3
 "
 " After highlighting search results, shows the search result 
 " that is found at the cursor in a different color.  Using N or n
@@ -34,17 +33,17 @@ set cpo&vim
 
 "====[ INTERFACE ]=============================================
 
-if maparg('/','n') == ""
-    nmap  <unique>         /   :call HLNextSetTrigger()<CR>/
+if maparg('/') == ""
+    nnoremap  <unique>         /   :call HLNextSetTrigger()<CR>/
 endif
-if maparg('?','n') == ""
-    nmap  <unique>         ?   :call HLNextSetTrigger()<CR>?
+if maparg('?') == ""
+    nnoremap  <unique>         ?   :call HLNextSetTrigger()<CR>?
 endif
 if maparg('n','n') == ""
-    nmap  <unique><silent> n  n:call HLNext()<CR>
+    nnoremap  <unique><silent> n  n:call HLNext()<CR>
 endif
 if maparg('N','n') == ""
-    nmap  <unique><silent> N  N:call HLNext()<CR>
+    nnoremap  <unique><silent> N  N:call HLNext()<CR>
 endif
 
 " Default highlighting for next match...
