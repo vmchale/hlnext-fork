@@ -7,29 +7,11 @@
 " to jump forward or backward will update the result at the 
 " cursor to be newly highlighted.
 "
-" Highlighting the next search result is done via the HLNext()
-" function.  In order to remove search highlighting it is
-" recommended to use a mapping similar to the following:
-"
-" nmap <silent> <BS> :call HLNextOff() <BAR> :nohlsearch<CR>
-"
-" If using documap.vim:
-"
-" Nmap <silent> <BS> [Cancel highlighting] :call HLNextOff() <BAR> :nohlsearch<CR> 
-"
-" If using documap.vim and either visualguide.vim or visualsmartia.vim
-"
-" Nmap <silent> <BS> [Cancel highlighting] :call HLNextOff() <BAR> :nohlsearch <BAR> :call VG_Show_CursorColumn('off')<CR> 
-
 " If already loaded, we're done...
 if exists("loaded_HLNext")
     finish
 endif
 let loaded_HLNext = 1
-
-" Preserve external compatibility options, then enable full vim compatibility...
-let s:save_cpo = &cpo
-set cpo&vim
 
 "====[ INTERFACE ]=============================================
 
@@ -39,24 +21,19 @@ endif
 if maparg('?') == ""
     nnoremap  <unique>         ?   :call HLNextSetTrigger()<CR>?
 endif
+if maparg('n','n') == ""
+    nnoremap  <unique><silent> n  n:call HLNext()<CR>
+endif
+if maparg('N','n') == ""
+    nnoremap  <unique><silent> N  N:call HLNext()<CR>
+endif
 
 nnoremap <unique><Leader>c :call HLNextOff() \| :nohlsearch<CR>
 
 " Default highlighting for next match...
 highlight default HLNext ctermfg=white ctermbg=red
 
-
 "====[ IMPLEMENTATION ]=======================================
-
-" map n/N to the right thing
-function! SetKeys()
-    if maparg('n','n') == ""
-        nnoremap  <unique><silent> n  n:call HLNext()<CR>
-    endif
-    if maparg('N','n') == ""
-        nnoremap  <unique><silent> N  N:call HLNext()<CR>
-    endif
-endfunction
 
 " Clear previous highlighting and set up new highlighting...
 function! HLNext ()
@@ -78,7 +55,6 @@ endfunction
 
 " Prepare to active next-match highlighting after cursor moves...
 function! HLNextSetTrigger ()
-    call SetKeys()
     augroup HLNext
         autocmd!
         autocmd  CursorMoved  *  :call HLNextMovedTrigger()
@@ -90,9 +66,5 @@ function! HLNextMovedTrigger ()
     augroup HLNext
         autocmd!
     augroup END
-    :unmap nN
     call HLNext()
 endfunction
-
-
-let &cpo = s:save_cpo
