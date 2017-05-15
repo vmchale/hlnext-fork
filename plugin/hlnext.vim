@@ -28,7 +28,7 @@ if maparg('N','n') == ""
     nnoremap  <unique><silent> N  N:call HLNext()<CR>
 endif
 
-nnoremap <unique><Leader>c :call HLNextOff() \| :nohlsearch<CR>
+nnoremap <unique><silent><Leader>c :call HLNextOff() \| :nohlsearch<CR>
 
 " Default highlighting for next match...
 highlight default HLNext ctermfg=white ctermbg=red
